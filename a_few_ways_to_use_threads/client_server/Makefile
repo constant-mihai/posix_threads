@@ -15,6 +15,11 @@ include Makefile.fun
 # Recipes
 #
 
+# TODO there is another use case here
+# Where the user might want to make multiple
+# programs in one folder.
+# Current implementation requires each prog
+# has it's own folder.
 main: $(objs)
 >   @echo Making Main
 >   $(f_check_subdirs_for_libs)
@@ -26,6 +31,11 @@ subdirs:
 
 all: main
 
+# TODO there is another use case here
+# Where the user might want to make multiple
+# libraries in one folder.
+# Current implementation requires each library 
+# has it's own folder.
 shared: $(objs)
 >   @echo Making Shared lib 
 >   $(f_check_subdirs_for_libs)

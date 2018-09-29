@@ -21,7 +21,7 @@ SHELL:= /bin/bash
 # General 
 # -------------------------------------- #
 # -------------------------------------- #
-name := lifecycle
+name := client_server
 main := yes 
 
 #
@@ -43,7 +43,7 @@ shl_fullname := $(shl_soname).$(shl_minor_number).$(shl_release_number)
 # -------------------------------------- #
 subdirs := 
 CURR_DIR := $(PWD)
-include_dirs := ../../utils/
+include_dirs := ../../utils
 library_dirs := 
 libraries := -pthread
 
@@ -53,7 +53,7 @@ libraries := -pthread
 # -------------------------------------- #
 CC := gcc
 CXX := g++ 
-compiler := gcc
+compiler := g++
 # Compilation command for the main program.
 compile_main = $(compiler) $(objs) -o $(name) $(LDFLAGS)
 
@@ -102,6 +102,10 @@ incs := $(h) $(hpp) $(cap_h)
 shared_flags := -shared -Wl,-soname,$(shl_soname)
 CFLAGS += -Wall -fno-diagnostics-show-caret 
 CPPFLAGS += -Wall -O0 -fno-diagnostics-show-caret -fPIC
+# Extra flags.
+# E.g: -std=c++11
+extra_flags := 
+CPPFLAGS += $(extra_flags)
 
 CPPFLAGS += $(foreach includedir,$(include_dirs),-I$(includedir))
 LDFLAGS += $(foreach librarydir,$(library_dirs),-L$(librarydir))
