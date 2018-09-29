@@ -1,0 +1,7 @@
+# Vim files
+*.swo
+*.swp
+
+# C/C++
+*.o
+*.d

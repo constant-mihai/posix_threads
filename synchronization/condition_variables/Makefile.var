@@ -1,0 +1,115 @@
+######################################################################
+# Variables.
+# This is where all the variables are set 
+######################################################################
+
+#
+# GNU
+# -------------------------------------- #
+# -------------------------------------- #
+SHELL:= /bin/bash
+.RECIPEPREFIX := >
+
+# 
+# Filetypes
+# -------------------------------------- #
+# -------------------------------------- #
+.SUFFIXES:
+.SUFFIXES: .c .C .cpp .o
+
+#
+# General 
+# -------------------------------------- #
+# -------------------------------------- #
+name := cond_static cond_dynamic cond
+main := yes 
+
+#
+# Shared library 
+# -------------------------------------- #
+# -------------------------------------- #
+shl_name := $(name)
+shl_version := 1
+shl_release_number := 0
+shl_minor_number := 0
+shl_linker_name := lib$(shl_name).so
+shl_soname := $(shl_linker_name).$(shl_version)
+shl_fullname := $(shl_soname).$(shl_minor_number).$(shl_release_number)
+
+
+#
+# Directories 
+# -------------------------------------- #
+# -------------------------------------- #
+subdirs := 
+CURR_DIR := $(PWD)
+include_dirs := ../../utils
+library_dirs := 
+libraries := -pthread
+
+#
+# Compiler 
+# -------------------------------------- #
+# -------------------------------------- #
+CC := gcc
+CXX := g++ 
+compiler := gcc 
+# Compilation command for the main program.
+compile_main = $(compiler) $(objs) -o $(name) $(LDFLAGS)
+
+#
+# Headers 
+# -------------------------------------- #
+# -------------------------------------- #
+h := $(wildcard *.h) $(call f_deep_includes_search,h)
+hpp := $(wildcard *.hpp) $(call f_deep_includes_search,hpp)
+cap_h := $(wildcard *.H) $(call f_deep_includes_search,H)
+
+
+#
+# Sources 
+# -------------------------------------- #
+# -------------------------------------- #
+c_srcs := $(wildcard *.c) $(call f_deep_source_search,c)
+cpp_srcs := $(wildcard *.cpp) $(call f_deep_source_search,cpp) 
+cxx_srcs := $(wildcard *.C) $(call f_deep_source_search,C) 
+
+srcs = $(c_srcs) $(cpp_srcs) $(cxx_srcs)
+
+#
+# Objects 
+# -------------------------------------- #
+# -------------------------------------- #
+#cxx_objs := ${cxx_srcs:.C=.o}
+#cxx_objs += ${cpp_srcs:.cpp=.o}
+#c_objs := ${c_srcs:.c=.o}
+basenames := $(basename $(srcs))
+objs := $(addsuffix .o,$(basenames))
+objs_without_main := $(filter-out $(name).o,$(objs))
+
+
+#
+# Includes 
+# -------------------------------------- #
+# -------------------------------------- #
+incs := $(h) $(hpp) $(cap_h)
+
+
+#
+# Flags 
+# -------------------------------------- #
+# -------------------------------------- #
+shared_flags := -shared -Wl,-soname,$(shl_soname)
+CFLAGS += -Wall -fno-diagnostics-show-caret 
+CPPFLAGS += -Wall -O0 -fno-diagnostics-show-caret -fPIC
+# Extra flags.
+# E.g: -std=c++11
+extra_flags := 
+CPPFLAGS += $(extra_flags)
+
+CPPFLAGS += $(foreach includedir,$(include_dirs),-I$(includedir))
+LDFLAGS += $(foreach librarydir,$(library_dirs),-L$(librarydir))
+# This is ruins it when you want to just link with something
+# like -pthreads
+#LDFLAGS += $(foreach library,$(libraries),-l$(library))
+LDFLAGS += $(foreach library,$(libraries),$(library))

@@ -1,0 +1,13 @@
+
+
+    1. Memory values seen when pthread_create() is called will be seen by new thread.
+       Data written after may not necessarily be seen by the new thread.
+    2. Data seen on mutex unlock (directly or waiting on a condition variable), can
+       also be seen by any thread that later locks the same mutex. Again, data written
+       after the mutex is unlocked may not necessarily be seen by the thread that locks
+       the mutex, even if the write occurs before the lock.
+    3. Memory values on thread termination, can also be seen by the thread that joins.
+       Same as above for data written after termination.
+    4. Memory values on signalling/broadcasting a conditioin variable can also be seen
+       by any thread that is awakened by that signal or broadcast. Same as above for
+       data written after the signal/broadcast.
